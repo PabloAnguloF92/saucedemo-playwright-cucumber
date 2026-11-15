@@ -22,24 +22,32 @@ src/test
 ## Instrucciones de Ejecución
 1. Clonar el repositorio:
    ```bash
-   git clone <URL_DE_TU_REPOSITORIO>
+   git clone https://github.com
    cd saucedemo-playwright-cucumber
    ```
-2. Ejecutar las pruebas desde terminal con Maven:
+2. Ejecutar todas las pruebas y generar el reporte gráfico desde terminal con Maven:
    ```bash
-   mvn test
+   mvn verify
    ```
-   *(También se puede ejecutar directamente desde IntelliJ haciendo clic en Run sobre `src/test/java/runner/TestRunner.java`)*.
-3. Visualizar el reporte generado al finalizar:
-   Abrir el archivo `target/cucumber-reports.html` en cualquier navegador web.
+   *(También se pueden ejecutar las pruebas directamente desde IntelliJ haciendo clic en Run sobre `src/test/java/runner/TestRunner.java`)*.
+3. Ejecutar un escenario específico mediante **Tags** (por ejemplo, `@Agregar_producto` o `@Ver_producto`):
+   ```bash
+   mvn verify -Dcucumber.filter.tags="@Agregar_producto"
+   ```
+4. Visualizar los reportes generados al finalizar:
+    * **Reporte gráfico (Masterthought):** Abrir `target/cucumber-html-reports/overview-features.html` (o `overview-tags.html`) en cualquier navegador web.
+    * **Reporte estándar de Cucumber:** Abrir `target/cucumber-reports.html`.
 
 ---
 
 ## Informe Breve: Estrategia de Automatización y Patrones Utilizados
 
 ### 1. Estrategia de Pruebas
-La estrategia se enfoca en validar los flujos críticos de negocio (Smoke & E2E) mediante **Behavior-Driven Development (BDD)**, separando la especificación funcional de la implementación técnica. Se cubrieron tanto caminos felices (compra completa con `standard_user`) como escenarios negativos de control de acceso (`locked_out_user` y credenciales inválidas).
+La estrategia se enfoca en validar los flujos críticos de negocio (Smoke & E2E) mediante **Behavior-Driven Development (BDD)**, separando la especificación funcional de la implementación técnica. Se diseñaron escenarios atómicos e independientes para cubrir:
+* **Caminos felices:** Inicio de sesión exitoso (`standard_user`), adición de productos al carrito con validación de contador, verificación en carrito y flujo completo de checkout.
+* **Escenarios negativos:** Control de acceso con usuario bloqueado (`locked_out_user`) y credenciales inválidas.
 
 ### 2. Patrones de Diseño Implementados
 * **Page Object Model (POM):** Cada vista de la aplicación (`LoginPage`, `ProductsPage`, `CartPage`, `CheckoutPage`) está encapsulada en su propia clase. Esto centraliza los selectores web y las interacciones, evitando duplicación de código y facilitando el mantenimiento si la interfaz cambia.
 * **Hooks / Singleton de Contexto:** Mediante las anotaciones `@Before` y `@After` de Cucumber en la clase `Hooks`, se garantiza que cada escenario se ejecute en un contexto de navegador limpio e independiente, evitando contaminación de estado entre pruebas.
+* **Ejecución Modular con Tags y Reportes Enriquecidos:** Uso de etiquetas Gherkin (`@Agregar_producto`, `@Ver_producto`, etc.) combinado con `maven-cucumber-reporting` para obtener métricas detalladas y estadísticas visuales por escenario y etiqueta.

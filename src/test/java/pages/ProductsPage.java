@@ -21,5 +21,13 @@ public class ProductsPage {
     public void goToCart() {
         page.click(".shopping_cart_link");
     }
+    public String getCartItemCount() {
+        return page.locator(".shopping_cart_badge").textContent();
+    }
+    public String getHeaderTitle() {
+        return page.locator(".app_logo").textContent();
+    }
+
+
 }
 

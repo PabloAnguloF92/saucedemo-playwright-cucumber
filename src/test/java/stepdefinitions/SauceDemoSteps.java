@@ -21,9 +21,9 @@ public class SauceDemoSteps {
         loginPage.login(user, pass);
     }
 
-    @Then("debería ver la página de productos")
-    public void verificarPaginaProductos() {
-        Assert.assertTrue(productsPage.isAtProductsPage());
+    @Then("debería ver la página de productos {string}")
+    public void verificarPaginaProductos(String tituloEsperado) {
+        Assert.assertEquals(tituloEsperado, productsPage.getHeaderTitle());
     }
 
     @When("agrega el producto {string} al carrito")
@@ -57,14 +57,19 @@ public class SauceDemoSteps {
         Assert.assertEquals(mensajeEsperado, checkoutPage.getConfirmationMessage());
     }
 
-    @Then("debería ver un mensaje de error indicando que el usuario está bloqueado")
-    public void verificarErrorBloqueado() {
-        Assert.assertTrue(loginPage.getErrorMessage().contains("Sorry, this user has been locked out"));
+    @Then("Valido mensaje {string}")
+    public void validoMensajeError(String mensajeEsperado) {
+        Assert.assertTrue(loginPage.getErrorMessage().contains(mensajeEsperado));
     }
 
     @Then("debería ver un mensaje de error indicando credenciales inválidas")
     public void verificarErrorCredencialesInvalidas() {
         Assert.assertTrue(loginPage.getErrorMessage().contains("Username and password do not match"));
     }
+    @Then("el ícono del carrito debería mostrar {string} producto")
+    public void verificarCantidadCarrito(String cantidadEsperada) {
+        Assert.assertEquals(cantidadEsperada, productsPage.getCartItemCount());
+    }
+
 }
 
